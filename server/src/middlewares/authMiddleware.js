@@ -1,6 +1,6 @@
-import { jwtService } from '../services/jwt.service.js';
+const { jwtService } = require('../services/jwt.service.js');
 
-export const authMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -32,3 +32,5 @@ export const authMiddleware = (req, res, next) => {
     res.sendStatus(403);
   }
 };
+
+module.exports = { authMiddleware };

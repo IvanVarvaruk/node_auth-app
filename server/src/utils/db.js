@@ -1,4 +1,4 @@
-import { Sequelize } from 'sequelize';
+const { Sequelize } = require('sequelize');
 
 const client = new Sequelize(
   process.env.DB_NAME || 'postgres',
@@ -10,4 +10,4 @@ const client = new Sequelize(
   },
 );
 
-export default client;
+module.exports = client;

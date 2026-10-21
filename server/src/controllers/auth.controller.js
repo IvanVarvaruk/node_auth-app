@@ -1,7 +1,7 @@
-import { userService } from '../services/user.service.js';
-import { ApiError } from '../exeptions/api.error.js';
-import { jwtService } from '../services/jwt.service.js';
-import { tokenService } from '../services/token.service.js';
+const { userService } = require('../services/user.service.js');
+const { ApiError } = require('../exeptions/api.error.js');
+const { jwtService } = require('../services/jwt.service.js');
+const { tokenService } = require('../services/token.service.js');
 
 const refreshCookieOptions = {
   httpOnly: true,
@@ -161,7 +161,7 @@ const resetPassword = async (req, res) => {
   res.status(200).json({ message: 'Password has been reset' });
 };
 
-export const authController = {
+const authController = {
   register,
   activate,
   login,
@@ -170,3 +170,5 @@ export const authController = {
   forgotPassword,
   resetPassword,
 };
+
+module.exports = { authController };

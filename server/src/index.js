@@ -1,13 +1,14 @@
 'use strict';
-// eslint-disable-next-line no-unused-vars
-import dotenv from 'dotenv/config';
-import express from 'express';
-import cors from 'cors';
-import cookieParser from 'cookie-parser';
 
-import { authRouter } from './routes/auth.route.js';
-import { userRouter } from './routes/user.route.js';
-import { errorMiddleware } from './middlewares/errorMiddleware.js';
+require('dotenv').config();
+
+const express = require('express');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
+
+const { authRouter } = require('./routes/auth.route.js');
+const { userRouter } = require('./routes/user.route.js');
+const { errorMiddleware } = require('./middlewares/errorMiddleware.js');
 
 const PORT = process.env.PORT || 3005;
 const allowedClientOrigins = [process.env.CLIENT_HOST].filter(Boolean);
@@ -59,3 +60,5 @@ app.listen(PORT, () => {
   //  eslint-disable-next-line no-console
   console.log(`Server is running on port ${PORT}`);
 });
+
+module.exports = { app };

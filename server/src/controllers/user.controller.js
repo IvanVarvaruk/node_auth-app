@@ -1,4 +1,4 @@
-import { userService } from '../services/user.service.js';
+const { userService } = require('../services/user.service.js');
 
 const getById = async (req, res) => {
   return userService.getUserById(req, res);
@@ -26,10 +26,12 @@ const getAll = async (req, res) => {
   res.status(200).json(users);
 };
 
-export const userController = {
+const userController = {
   getById,
   update,
   updatePassword,
   updateEmail,
   getAll,
 };
+
+module.exports = { userController };

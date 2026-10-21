@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+const jwt = require('jsonwebtoken');
 
 const generateToken = (user) => {
   const payload = {
@@ -46,9 +46,11 @@ const verifyRefreshToken = (refreshToken) => {
   }
 };
 
-export const jwtService = {
+const jwtService = {
   generateToken,
   verifyToken,
   signRefreshToken,
   verifyRefreshToken,
 };
+
+module.exports = { jwtService };

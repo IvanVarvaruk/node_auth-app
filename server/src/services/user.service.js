@@ -1,9 +1,9 @@
-import User from '../models/user.model.js';
-import { v4 as uuidv4 } from 'uuid';
-import bcrypt from 'bcrypt';
-import { Op } from 'sequelize';
-import { ApiError } from '../exeptions/api.error.js';
-import { emailService } from './email.service.js';
+const { randomUUID } = require('node:crypto');
+const User = require('../models/user.model.js');
+const bcrypt = require('bcrypt');
+const { Op } = require('sequelize');
+const { ApiError } = require('../exeptions/api.error.js');
+const { emailService } = require('./email.service.js');
 
 const getAllUsers = async (req, res) => {
   const users = await User.findAll();
@@ -33,7 +33,7 @@ const requestPasswordReset = async (email) => {
     return;
   }
 
-  const resetPasswordToken = uuidv4();
+  const resetPasswordToken = randomUUID();
 
   user.resetPasswordToken = resetPasswordToken;
   user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000);
@@ -316,7 +316,7 @@ const createUser = async (name, email, password) => {
     });
   }
 
-  const activationToken = uuidv4();
+  const activationToken = randomUUID();
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await User.create({
@@ -331,7 +331,7 @@ const createUser = async (name, email, password) => {
   return normalizeUser(user);
 };
 
-export const userService = {
+const userService = {
   getUserById,
   updateUser,
   changePassword,
@@ -346,3 +346,5 @@ export const userService = {
   requestPasswordReset,
   resetPassword,
 };
+
+module.exports = { userService };

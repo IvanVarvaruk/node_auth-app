@@ -1,4 +1,4 @@
-import RefreshToken from '../models/refreshToken.model.js';
+const RefreshToken = require('../models/refreshToken.model.js');
 
 const saveRefreshToken = async (userId, refreshToken) => {
   const existingToken = await RefreshToken.findOne({
@@ -21,8 +21,10 @@ const removeRefreshToken = async (userId) => {
   return RefreshToken.destroy({ where: { UserId: userId } });
 };
 
-export const tokenService = {
+const tokenService = {
   saveRefreshToken,
   getRefreshToken,
   removeRefreshToken,
 };
+
+module.exports = { tokenService };

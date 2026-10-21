@@ -1,6 +1,6 @@
-import { ApiError } from '../exeptions/api.error.js';
+const { ApiError } = require('../exeptions/api.error.js');
 
-export const errorMiddleware = (err, req, res, next) => {
+const errorMiddleware = (err, req, res, next) => {
   if (res.headersSent) {
     return next(err);
   }
@@ -13,3 +13,5 @@ export const errorMiddleware = (err, req, res, next) => {
 
   return res.status(500).send({ message: 'Unexpected error' });
 };
+
+module.exports = { errorMiddleware };

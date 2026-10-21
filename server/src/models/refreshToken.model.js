@@ -1,6 +1,6 @@
-import client from '../utils/db.js';
-import { DataTypes } from 'sequelize';
-import User from './user.model.js';
+const client = require('../utils/db.js');
+const { DataTypes } = require('sequelize');
+const User = require('./user.model.js');
 
 const RefreshToken = client.define('RefreshToken', {
   token: {
@@ -12,4 +12,4 @@ const RefreshToken = client.define('RefreshToken', {
 RefreshToken.belongsTo(User);
 User.hasOne(RefreshToken);
 
-export default RefreshToken;
+module.exports = RefreshToken;

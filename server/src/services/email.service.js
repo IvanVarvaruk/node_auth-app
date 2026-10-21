@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -44,8 +44,10 @@ const sendEmailChangeNotification = async (oldEmail, newEmail) => {
   return sendEmail(oldEmail, subject, text);
 };
 
-export const emailService = {
+const emailService = {
   sendActivationEmail,
   sendPasswordResetEmail,
   sendEmailChangeNotification,
 };
+
+module.exports = { emailService };

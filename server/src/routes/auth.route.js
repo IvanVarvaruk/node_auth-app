@@ -1,9 +1,9 @@
-import { Router } from 'express';
+const { Router } = require('express');
 
-import { authController } from '../controllers/auth.controller.js';
-import { catchError } from '../utils/catchError.js';
+const { authController } = require('../controllers/auth.controller.js');
+const { catchError } = require('../utils/catchError.js');
 
-export const authRouter = new Router();
+const authRouter = new Router();
 
 authRouter.post('/registration', catchError(authController.register));
 
@@ -20,3 +20,5 @@ authRouter.post(
   '/reset-password/:token',
   catchError(authController.resetPassword),
 );
+
+module.exports = { authRouter };

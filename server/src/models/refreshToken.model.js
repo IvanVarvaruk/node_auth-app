@@ -6,7 +6,7 @@ const RefreshToken = client.define('RefreshToken', {
   token: {
     type: DataTypes.STRING,
     allowNull: false,
-  }
+  },
 });
 
 RefreshToken.belongsTo(User);

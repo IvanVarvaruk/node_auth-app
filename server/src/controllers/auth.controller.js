@@ -19,6 +19,7 @@ const setRefreshTokenCookie = (res, refreshToken) => {
 
 const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
   return emailRegex.test(email);
 };
 
@@ -95,7 +96,7 @@ const login = async (req, res) => {
   setRefreshTokenCookie(res, refreshToken);
 
   res.status(200).json({ user, accessToken });
-}
+};
 
 const refresh = async (req, res) => {
   const { refreshToken } = req.cookies;
@@ -144,7 +145,21 @@ const logout = async (req, res) => {
 
   res.clearCookie('refreshToken', refreshCookieOptions);
   res.sendStatus(204);
-}
+};
+
+const forgotPassword = async (req, res) => {
+  await userService.requestPasswordReset(req.body?.email);
+
+  res.status(200).json({
+    message: 'If an account exists, a password reset link has been sent',
+  });
+};
+
+const resetPassword = async (req, res) => {
+  await userService.resetPassword(req.params.token, req.body);
+
+  res.status(200).json({ message: 'Password has been reset' });
+};
 
 export const authController = {
   register,
@@ -152,4 +167,6 @@ export const authController = {
   login,
   refresh,
   logout,
+  forgotPassword,
+  resetPassword,
 };

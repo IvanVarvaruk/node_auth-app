@@ -1,7 +1,9 @@
 import RefreshToken from '../models/refreshToken.model.js';
 
 const saveRefreshToken = async (userId, refreshToken) => {
-  const existingToken = await RefreshToken.findOne({ where: { UserId: userId } });
+  const existingToken = await RefreshToken.findOne({
+    where: { UserId: userId },
+  });
 
   if (existingToken) {
     existingToken.token = refreshToken;
@@ -12,11 +14,11 @@ const saveRefreshToken = async (userId, refreshToken) => {
 };
 
 const getRefreshToken = async (refreshToken) => {
-  return await RefreshToken.findOne({ where: { token: refreshToken } });
+  return RefreshToken.findOne({ where: { token: refreshToken } });
 };
 
 const removeRefreshToken = async (userId) => {
-  return await RefreshToken.destroy({ where: { UserId: userId } });
+  return RefreshToken.destroy({ where: { UserId: userId } });
 };
 
 export const tokenService = {

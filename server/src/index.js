@@ -1,5 +1,5 @@
 'use strict';
-// eslint-disable-next-line import/no-unresolved
+// eslint-disable-next-line no-unused-vars
 import dotenv from 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
@@ -7,13 +7,12 @@ import cookieParser from 'cookie-parser';
 
 import { authRouter } from './routes/auth.route.js';
 import { userRouter } from './routes/user.route.js';
-import { authMiddleware } from './middlewares/authMiddleware.js';
 import { errorMiddleware } from './middlewares/errorMiddleware.js';
 
 const PORT = process.env.PORT || 3005;
 const allowedClientOrigins = [process.env.CLIENT_HOST].filter(Boolean);
 
-const isDevelopmentOrigin = origin => {
+const isDevelopmentOrigin = (origin) => {
   if (process.env.NODE_ENV === 'production') {
     return false;
   }
@@ -40,7 +39,10 @@ app.use(
         allowedClientOrigins.includes(origin) ||
         isDevelopmentOrigin(origin);
 
-      callback(allowed ? null : new Error('Origin not allowed by CORS'), allowed);
+      callback(
+        allowed ? null : new Error('Origin not allowed by CORS'),
+        allowed,
+      );
     },
     credentials: true,
   }),
@@ -49,8 +51,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use(authRouter);
-app.use(authMiddleware, userRouter);
+app.use(userRouter);
 app.use(errorMiddleware);
+app.use((req, res) => res.status(404).json({ message: 'Not found' }));
 
 app.listen(PORT, () => {
   //  eslint-disable-next-line no-console

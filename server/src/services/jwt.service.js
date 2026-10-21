@@ -8,12 +8,14 @@ const generateToken = (user) => {
   };
 
   const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+
   return token;
 };
 
 const verifyToken = (token) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
     return decoded;
   } catch (err) {
     return null;
@@ -27,7 +29,9 @@ const signRefreshToken = (user) => {
     email: user.email,
   };
 
-  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+  const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: '7d',
+  });
 
   return refreshToken;
 };
@@ -35,6 +39,7 @@ const signRefreshToken = (user) => {
 const verifyRefreshToken = (refreshToken) => {
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
     return decoded;
   } catch (err) {
     return null;

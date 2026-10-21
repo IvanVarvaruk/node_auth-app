@@ -5,6 +5,7 @@ export const authMiddleware = (req, res, next) => {
 
   if (!authHeader) {
     res.sendStatus(401);
+
     return;
   }
 
@@ -12,6 +13,7 @@ export const authMiddleware = (req, res, next) => {
 
   if (!token) {
     res.sendStatus(401);
+
     return;
   }
 
@@ -20,6 +22,7 @@ export const authMiddleware = (req, res, next) => {
 
     if (!decoded) {
       res.sendStatus(403);
+
       return;
     }
 

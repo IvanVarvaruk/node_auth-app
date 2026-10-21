@@ -5,12 +5,10 @@ export const errorMiddleware = (err, req, res, next) => {
     return next(err);
   }
 
-  if (process.env.NODE_ENV !== 'production') {
-    console.error(err.stack || err.message);
-  }
-
   if (err instanceof ApiError) {
-    return res.status(err.status).json({ message: err.message, errors: err.errors });
+    return res
+      .status(err.status)
+      .json({ message: err.message, errors: err.errors });
   }
 
   return res.status(500).send({ message: 'Unexpected error' });

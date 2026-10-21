@@ -2,7 +2,7 @@ import { userService } from '../services/user.service.js';
 
 const getById = async (req, res) => {
   return userService.getUserById(req, res);
-}
+};
 
 const update = async (req, res) => {
   return userService.updateUser(req, res);
@@ -22,8 +22,9 @@ const updateEmail = async (req, res) => {
 
 const getAll = async (req, res) => {
   const users = await userService.getAllUsers(req, res);
+
   res.status(200).json(users);
-}
+};
 
 export const userController = {
   getById,

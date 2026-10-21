@@ -14,9 +14,85 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserByActivationToken = async (activationToken) => {
-  return await User.findOne({ where: { activationToken: activationToken} });
+  return User.findOne({ where: { activationToken: activationToken } });
 };
 
+const requestPasswordReset = async (email) => {
+  if (typeof email !== 'string' || !email.trim()) {
+    throw ApiError.BadRequest('Email is required', {
+      email: 'Email is required',
+    });
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const user = await User.findOne({
+    where: { email: { [Op.iLike]: normalizedEmail } },
+  });
+
+  if (!user) {
+    return;
+  }
+
+  const resetPasswordToken = uuidv4();
+
+  user.resetPasswordToken = resetPasswordToken;
+  user.resetPasswordExpires = new Date(Date.now() + 60 * 60 * 1000);
+  await user.save();
+
+  await emailService.sendPasswordResetEmail(user.email, resetPasswordToken);
+};
+
+const resetPassword = async (token, payload = {}) => {
+  const { password, confirmation } = payload || {};
+
+  if (
+    typeof password !== 'string' ||
+    typeof confirmation !== 'string' ||
+    !password ||
+    !confirmation
+  ) {
+    throw ApiError.BadRequest('Password and confirmation are required', {
+      password: 'Password and confirmation are required',
+      confirmation: 'Password and confirmation are required',
+    });
+  }
+
+  if (password.length < 6) {
+    throw ApiError.BadRequest('Password must be at least 6 characters', {
+      password: 'At least 6 characters',
+    });
+  }
+
+  if (password !== confirmation) {
+    throw ApiError.BadRequest('Password confirmation does not match', {
+      confirmation: 'Passwords do not match',
+    });
+  }
+
+  if (typeof token !== 'string' || !token) {
+    throw ApiError.BadRequest('Invalid or expired password reset link', {
+      token: 'Invalid or expired password reset link',
+    });
+  }
+
+  const user = await User.findOne({
+    where: {
+      resetPasswordToken: token,
+      resetPasswordExpires: { [Op.gt]: new Date() },
+    },
+  });
+
+  if (!user) {
+    throw ApiError.BadRequest('Invalid or expired password reset link', {
+      token: 'Invalid or expired password reset link',
+    });
+  }
+
+  user.password = await bcrypt.hash(password, 10);
+  user.resetPasswordToken = null;
+  user.resetPasswordExpires = null;
+  await user.save();
+};
 
 const getUserById = async (req, res) => {
   const { id } = req.params;
@@ -267,4 +343,6 @@ export const userService = {
   checkPassword,
   getAllUsers,
   getUserByActivationToken,
+  requestPasswordReset,
+  resetPassword,
 };

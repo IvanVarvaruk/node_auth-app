@@ -23,6 +23,12 @@ const User = client.define('User', {
   activationToken: {
     type: DataTypes.STRING,
   },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+  },
+  resetPasswordExpires: {
+    type: DataTypes.DATE,
+  },
 });
 
 export default User;

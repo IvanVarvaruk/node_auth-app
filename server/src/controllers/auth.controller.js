@@ -2,13 +2,12 @@ const { userService } = require('../services/user.service.js');
 const { ApiError } = require('../exeptions/api.error.js');
 const { jwtService } = require('../services/jwt.service.js');
 const { tokenService } = require('../services/token.service.js');
-
-const refreshCookieOptions = {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  path: '/',
-};
+const { refreshCookieOptions } = require('../config/auth.config.js');
+const {
+  EMAIL_REGEX,
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_MIN_LENGTH_MESSAGE,
+} = require('../constants/auth.constants.js');
 
 const setRefreshTokenCookie = (res, refreshToken) => {
   res.cookie('refreshToken', refreshToken, {
@@ -17,25 +16,20 @@ const setRefreshTokenCookie = (res, refreshToken) => {
   });
 };
 
-const validateEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-  return emailRegex.test(email);
-};
-
-const validatePassword = (password) => {
-  return password.length >= 6;
-};
-
 const register = async (req, res) => {
   const { name, email, password } = req.body;
 
-  const errors = {
-    email: !validateEmail(email),
-    password: !validatePassword(password),
-  };
+  const errors = {};
 
-  if (errors.email || errors.password) {
+  if (typeof email !== 'string' || !EMAIL_REGEX.test(email)) {
+    errors.email = 'Email is not valid';
+  }
+
+  if (typeof password !== 'string' || password.length < PASSWORD_MIN_LENGTH) {
+    errors.password = PASSWORD_MIN_LENGTH_MESSAGE;
+  }
+
+  if (Object.keys(errors).length > 0) {
     throw ApiError.BadRequest('Validation errors', errors);
   }
 

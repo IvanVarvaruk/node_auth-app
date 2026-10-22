@@ -4,6 +4,10 @@ const bcrypt = require('bcrypt');
 const { Op } = require('sequelize');
 const { ApiError } = require('../exeptions/api.error.js');
 const { emailService } = require('./email.service.js');
+const {
+  PASSWORD_MIN_LENGTH,
+  PASSWORD_MIN_LENGTH_MESSAGE,
+} = require('../constants/auth.constants.js');
 
 const getAllUsers = async (req, res) => {
   const users = await User.findAll();
@@ -57,9 +61,9 @@ const resetPassword = async (token, payload = {}) => {
     });
   }
 
-  if (password.length < 6) {
-    throw ApiError.BadRequest('Password must be at least 6 characters', {
-      password: 'At least 6 characters',
+  if (password.length < PASSWORD_MIN_LENGTH) {
+    throw ApiError.BadRequest(PASSWORD_MIN_LENGTH_MESSAGE, {
+      password: PASSWORD_MIN_LENGTH_MESSAGE,
     });
   }
 
@@ -176,9 +180,9 @@ const changePassword = async (userId, payload = {}) => {
     throw ApiError.BadRequest('All password fields are required');
   }
 
-  if (newPassword.length < 6) {
-    throw ApiError.BadRequest('Password must be at least 6 characters', {
-      newPassword: 'At least 6 characters',
+  if (newPassword.length < PASSWORD_MIN_LENGTH) {
+    throw ApiError.BadRequest(PASSWORD_MIN_LENGTH_MESSAGE, {
+      newPassword: PASSWORD_MIN_LENGTH_MESSAGE,
     });
   }
 
